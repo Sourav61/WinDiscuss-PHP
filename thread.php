@@ -18,42 +18,46 @@
     <?php include 'partials/_header.php' ?>
     <?php include 'partials/_dbConnect.php' ?>
     <?php
-    $id = $_GET['cat_id'];
-    $sql = "Select * from `categories` where `category_id` = $id";
+    $id = $_GET['thread_id'];
+    $sql = "Select * from `threads` where `thread_id` = $id";
     $result = mysqli_query($conn, $sql);
+    $noResult = true;
     while ($row = mysqli_fetch_assoc($result)) {
-        $cat_name = $row['category_name'];
-        $cat_desc = $row['category_description'];
+        $title = $row['thread_title'];
+        $id = $row['thread_id'];
+        $desc = $row['thread_desc'];
     }
     ?>
 
     <?php
-    $showAlert = false;
+    $showAlert = true;
     $method = $_SERVER['REQUEST_METHOD'];
+
     if ($method == 'POST') {
-        $th_title = $_POST['title'];
-        $th_desc = $_POST['desc'];
-        $sql = "INSERT INTO `threads` (`thread_title`, `thread_desc`, `thread_cat_id`, `thread_user_id`, `timestamp`) VALUES 
-        ('$th_title', '$th_desc', '$id', '0', current_timestamp())";
+        $id = $_GET['thread_id'];
+        $content = $_POST['comment'];
+
+        $sql = "INSERT INTO `comments` (`comment_content`, `thread_id`, `comment_by`, `comment_time`) VALUES
+             ('$content', '$id', '0', current_timestamp());";
         $result = mysqli_query($conn, $sql);
+
         $showAlert = true;
         if ($showAlert) {
             echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>Success!</strong> Your concern has been registered, we will get back to you soon.
+            <strong>Success!</strong>Thanks for your disccussion with us. Happy Coding!
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>';
         }
     }
     ?>
 
-
     <div class="container my-4">
         <div class="jumbotron">
-            <h1 class="display-4">Welcome to
-                <?php echo $cat_name ?> Forum
+            <h1 class="display-4">
+                <?php echo $title ?>
             </h1>
             <p class="lead">
-                <?php echo $cat_desc ?>
+                <?php echo $desc ?>
             </p>
             <hr class="my-4">
             <h2>Rules</h2>
@@ -70,53 +74,43 @@
                 </li>
             </ul>
 
-            <p class="lead">
-                <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-            </p>
+            <p>Posted by: <b>Sourav</b></p>
         </div>
     </div>
 
-
     <div class="container">
-        <h1 class="py-2">Start a Discussion</h1>
+        <h1 class="py-2">Post a Comment</h1>
         <form action="<?php echo $_SERVER['REQUEST_URI'] ?>" .$id method="post">
-            <div class="mb-3 form-group">
-                <label for="title" class="form-label">Problem Title</label>
-                <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp">
-                <div id="emailHelp" class="form-text">Keep your title as short and crisp as possible.</div>
-            </div>
+
             <div class="mb-3">
-                <label for="desc" class="form-label">Elaborate your concern</label>
-                <textarea class="form-control" id="desc" name="desc" rows="3"></textarea>
+                <label for="comment" class="form-label">Type Your Comment</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
+            <button type="submit" class="btn btn-primary">Post Comment</button>
         </form>
     </div>
 
     <div class="container" id="ques">
-        <h1 class="py-2">Browse Questions</h1>
+        <h1 class="py-2">Discussions</h1>
         <?php
-        $id = $_GET['cat_id'];
-        $sql = "Select * from `threads` where `thread_cat_id` = $id";
+        $id = $_GET['thread_id'];
+        $sql = "Select * from `comments` where `thread_id` = $id";
         $result = mysqli_query($conn, $sql);
         $noResult = true;
         while ($row = mysqli_fetch_assoc($result)) {
             $noResult = false;
-            $title = $row['thread_title'];
-            $id = $row['thread_id'];
-            $desc = $row['thread_desc'];
-            $thread_time = new DateTimeImmutable($row['timestamp']);
+            $id = $row['comment_id'];
+            $content = $row['comment_content'];
+            $comment_time = new DateTimeImmutable($row['comment_time']);
 
             echo '<div class="media d-flex my-3">
                 <img class="mr-3 h-50 m-2" src="images/user.png" width="54" alt="Generic placeholder image">
                 <div class="media-body">
-                <p class="font-weight-bold my-0" style="font-weight: bold;">Annonymous User at ' . $thread_time->format('d-m-Y H:i:s') . '</p>
-                    <h5 class="mt-0"> <a style="text-decoration: none;" class="text-dark" href="thread.php?thread_id=' . $id . '">' . $title . '</a></h5>
-                    ' . $desc . '
+                <p class="font-weight-bold my-0" style="font-weight: bold;">Annonymous User at ' . $comment_time->format('d-m-Y H:i:s'). '</p>
+                    ' . $content . '
                 </div>
             </div>';
         }
-
         if ($noResult) {
             echo '<div class="jumbotron jumbotron-fluid">
                 <div class="container">
@@ -126,7 +120,6 @@
             </div>';
         }
         ?>
-
     </div>
 
     <?php include 'partials/_footer.php' ?>

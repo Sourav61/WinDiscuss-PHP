@@ -7,6 +7,11 @@
     <title>WinDiscuss - Doubt Solver</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <style>
+        #ques {
+            min-height: 433px;
+        }
+    </style>
 </head>
 
 <body>
@@ -44,7 +49,7 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <div class="container my-3">
+    <div class="container my-3" id="ques">
         <h2 class="text-center my-3">Welcome to WinDiscuss - Browse Categories</h2>
         <div class="row my-3">
 
@@ -62,7 +67,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><a href="threadList.php?cat_id=' . $id . '" style="text-decoration: none;">' . $cat . '</a></h5>
                             <p class="card-text">' . substr($desc, 0, 90) . '....</p>
-                            <a href="threadList.php" class="btn btn-primary">View Threads</a>
+                            <a href="threadList.php?cat_id=' . $id . '" class="btn btn-primary">View Threads</a>
                         </div>
                     </div>
                 </div>';
@@ -75,7 +80,7 @@
     <?php include 'partials/_footer.php' ?>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous">
-    </script>
+        </script>
 </body>
 
 </html>

@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 echo '
     <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark" data-bs-theme="dark">
         <div class="container-fluid">
@@ -33,19 +35,36 @@ echo '
                     <li class="nav-item">
                         <a class="nav-link" href="contact.php">Contact</a>
                     </li>
-                </ul>
-                <form class="d-flex" role="search">
+                </ul>';
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    echo '<form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-success" type="submit">Search</button>
+                    <p class="text-light my-0 mx-2">Welcome ' . $_SESSION['useremail'] . '</p>
+                    <button class="btn btn-outline-success" style="margin-left: 0.5rem;"
+                data-bs-toggle="modal" data-bs-target="#loginModal">Logout</button>
+                    </form>';
+} else {
+    echo '<form class="d-flex" role="search">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-success" type="submit">Search</button>
                 </form>
                 <button class="btn btn-outline-success" style="margin-left: 0.5rem;"
                 data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
                 <button class="btn btn-outline-success mx-2"
-                data-bs-toggle="modal" data-bs-target="#singUpModal">SignUp</button>
-            </div>
+                data-bs-toggle="modal" data-bs-target="#singUpModal">SignUp</button>';
+}
+echo '</div>
         </div>
     </nav>';
 
 include 'partials/_loginModal.php';
 include 'partials/_signupModal.php';
+
+if (isset($_GET['signup']) && $_GET['signup'] == "true") {
+    echo '<div class="alert alert-success alert-dismissible fade show my-0" role="alert">
+    <strong>Holy guacamole!</strong> You are successfully registered as a user! Please log in.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>';
+}
 ?>
